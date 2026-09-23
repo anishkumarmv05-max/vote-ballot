@@ -3,6 +3,7 @@ globalThis.WebSocket = WebSocket as unknown as typeof globalThis.WebSocket;
 
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { MidnightWalletProvider } from '../midnight-wallet-provider.js';
 import { NodeZkConfigProvider } from '@midnight-ntwrk/midnight-js-node-zk-config-provider';
 import { indexerPublicDataProvider } from '@midnight-ntwrk/midnight-js-indexer-public-data-provider';
@@ -169,8 +170,12 @@ async function main() {
     );
 
     const deployed = await deployContract(providers, {
-        compiledContract: resolvedContract,
-        args: [3n]
+      compiledContract: resolvedContract,
+      privateStateId: 'votingPrivateState',
+      initialPrivateState: {
+        secretKey: crypto.randomBytes(32),
+      },
+      args: [3n, new Uint8Array(32)],
     });
     
     const contractAddress = deployed.deployTxData.public.contractAddress;

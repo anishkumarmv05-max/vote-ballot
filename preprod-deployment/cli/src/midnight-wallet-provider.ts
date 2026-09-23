@@ -76,7 +76,15 @@ export class MidnightWalletProvider implements MidnightProvider, WalletProvider 
     return this.zswapSecretKeys.coinPublicKey;
   }
 
+  get coinPublicKey(): CoinPublicKey {
+    return this.zswapSecretKeys.coinPublicKey;
+  }
+
   getEncryptionPublicKey(): EncPublicKey {
+    return this.zswapSecretKeys.encryptionPublicKey;
+  }
+
+  get encryptionPublicKey(): EncPublicKey {
     return this.zswapSecretKeys.encryptionPublicKey;
   }
 
