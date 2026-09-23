@@ -28,3 +28,4 @@ managed/*
 !managed/.gitkeep
 
 .env
+rewrite.sh

@@ -1,5 +1,5 @@
 # Midnight Ballot
-[![CI](https://github.com/maheshmani75/midnight_ballot/actions/workflows/ci.yml/badge.svg)](https://github.com/maheshmani75/midnight_ballot/actions/workflows/ci.yml)
+[![CI](https://github.com/anishkumarmv05-max/vote-ballot/actions/workflows/ci.yml/badge.svg)](https://github.com/anishkumarmv05-max/vote-ballot/actions/workflows/ci.yml)
 > Anonymous ballots, publicly verifiable tallies — private voting on Midnight.
 
 ## Live Demo
@@ -62,7 +62,7 @@ An on-chain observer can see the total number of ballots cast and the running ta
 ## Setup & Run Locally
 ```bash
 # 1. Clone the repository
-git clone https://github.com/maheshmani75/midnight_ballot.git
+git clone https://github.com/anishkumarmv05-max/vote-ballot.git
 cd midnight_ballot
 
 # 2. Install dependencies
