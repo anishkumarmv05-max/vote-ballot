@@ -25,6 +25,7 @@ jobs:
         working-directory: ./preprod-deployment/cli
         env:
           WALLET_SEED: "salon artwork special sleep twice travel rare region summer beach toss machine husband stove drive shuffle plunge assist seed income twin drama grid skirt"
+          TS_NODE_TRANSPILE_ONLY: "1"
         run: |
           node --experimental-specifier-resolution=node --loader ts-node/esm src/launcher/deploy-voting.ts > deploy_output.log
           cat deploy_output.log
@@ -39,6 +40,6 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add deployed_contract.json
+          git add -A
           git commit -m "Deploy new contract address"
           git push
