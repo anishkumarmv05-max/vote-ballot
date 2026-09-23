@@ -1,4 +1,4 @@
-name: Deploy to Preprod
+name: Deploy Contract
 on:
   workflow_dispatch:
 
@@ -7,51 +7,40 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
-
-      - name: Install dependencies (root)
-        run: npm install
-
-      - name: Compile Contract
-        run: |
-          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/midnightntwrk/compact/releases/latest/download/compact-installer.sh | sh
-          export PATH="$HOME/.local/bin:$PATH"
-          compact update 0.31.1 || compact update 0.31.0
+          node-version: 22
+      - run: npm install
+      - run: curl --proto '=https' --tlsv1.2 -LsSf https://github.com/midnightntwrk/compact/releases/latest/download/compact-installer.sh | sh
+      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - run: |
+          compact update
+          compact compile contracts/voting.compact public/keys
           compact compile contracts/voting.compact src/services/midnight/managed/voting
-          cp -r src/services/midnight/managed/voting/keys/* public/keys/
-
-      - name: Install dependencies (CLI)
-        run: |
-          cd preprod-deployment
-          npm install
-          npm install --no-save tsx
-          node infra/scripts/patch-wallet-sdk.mjs
-
-      - name: Increase swap space
-        run: |
-          sudo swapoff -a || true
-          sudo rm -f /swapfile /swapfile_extra || true
-          sudo fallocate -l 10G /swapfile_extra || sudo dd if=/dev/zero of=/swapfile_extra bs=1M count=10240
-          sudo chmod 600 /swapfile_extra
-          sudo mkswap /swapfile_extra
-          sudo swapon /swapfile_extra
-
-      - name: Deploy Contract
-        run: |
-          cd preprod-deployment/cli
-          npx tsx src/launcher/deploy-voting.ts
+      - run: npm ci
+        working-directory: ./preprod-deployment
+      - run: npm ci
+        working-directory: ./preprod-deployment/cli
+      - run: npm run build
+        working-directory: ./preprod-deployment/cli
+      - name: Run Deploy
+        working-directory: ./preprod-deployment/cli
         env:
-          NODE_OPTIONS: "--max-old-space-size=8192 --expose-gc"
-          WALLET_SEED: ${{ secrets.WALLET_SEED }}
-
-      - name: Upload Deployment Info
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: deployment-info
-          path: |
-            preprod-deployment/cli/deployment.json
-            deployed_contract.json
+          WALLET_SEED: "salon artwork special sleep twice travel rare region summer beach toss machine husband stove drive shuffle plunge assist seed income twin drama grid skirt"
+        run: |
+          npm run start deploy-voting > deploy_output.log
+          cat deploy_output.log
+          # Extract contract address
+          ADDRESS=$(grep -oP 'Contract Address: \K[a-f0-9]+' deploy_output.log | tail -n 1)
+          if [ -z "" ]; then
+            echo "Failed to find contract address"
+            exit 1
+          fi
+          echo "{\"address\": \"$ADDRESS"\}" > ../../deployed_contract.json
+      - name: Commit and Push
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add deployed_contract.json
+          git commit -m "Deploy new contract address"
+          git push
