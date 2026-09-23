@@ -32,7 +32,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          compact update 0.31.1 || compact update 0.31.0
+          compact update
           compact compile contracts/voting.compact public/keys
           compact compile contracts/voting.compact src/services/midnight/managed/voting
 
