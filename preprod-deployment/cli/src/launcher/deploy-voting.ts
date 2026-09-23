@@ -124,9 +124,17 @@ async function main() {
 
   console.log("Initializing providers...");
     const zkConfigProvider = new NodeZkConfigProvider('../../public/keys');
-    const originalGetZkConfig = zkConfigProvider.getZkConfiguration.bind(zkConfigProvider);
-    zkConfigProvider.getZkConfiguration = async (circuitId: string) => {
-      return originalGetZkConfig(circuitId.replace("voting#", ""));
+    const originalGetProverKey = zkConfigProvider.getProverKey.bind(zkConfigProvider);
+    zkConfigProvider.getProverKey = async (circuitId: string) => {
+      return originalGetProverKey(circuitId.replace("voting#", ""));
+    };
+    const originalGetVerifierKey = zkConfigProvider.getVerifierKey.bind(zkConfigProvider);
+    zkConfigProvider.getVerifierKey = async (circuitId: string) => {
+      return originalGetVerifierKey(circuitId.replace("voting#", ""));
+    };
+    const originalGetZKIR = zkConfigProvider.getZKIR.bind(zkConfigProvider);
+    zkConfigProvider.getZKIR = async (circuitId: string) => {
+      return originalGetZKIR(circuitId.replace("voting#", ""));
     };
   const storagePassword = "TempPassword123!Secure";
   
