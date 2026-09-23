@@ -22,7 +22,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          compact --version
+          compact update 0.31.1 || compact update 0.31.0
 
       - name: Compile Contract
         run: |
