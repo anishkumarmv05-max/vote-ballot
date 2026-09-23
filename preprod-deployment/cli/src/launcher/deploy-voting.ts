@@ -123,13 +123,7 @@ async function main() {
   console.log(`DUST available: ${dustBalance}! Deploying contract...`);
 
   console.log("Initializing providers...");
-  const baseZkConfigProvider = new NodeZkConfigProvider('../../public/keys');
-  const zkConfigProvider = {
-    getZkConfig(circuitId: string) {
-      const parsedCircuitId = circuitId.split('#').pop() || circuitId;
-      return baseZkConfigProvider.getZkConfig(parsedCircuitId);
-    }
-  } as any;
+  const zkConfigProvider = new NodeZkConfigProvider('../../public/keys');
   const storagePassword = "TempPassword123!Secure";
   
   const providers = {
