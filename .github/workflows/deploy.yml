@@ -21,8 +21,6 @@ jobs:
         working-directory: ./preprod-deployment
       - run: npm install
         working-directory: ./preprod-deployment/cli
-      - run: npm run build
-        working-directory: ./preprod-deployment/cli
       - name: Run Deploy
         working-directory: ./preprod-deployment/cli
         env:
